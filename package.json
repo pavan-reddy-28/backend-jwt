@@ -6,17 +6,21 @@
   "scripts": {
     "devStart": "nodemon server.js",
     "devStartAuth": "nodemon authServer.js",
+    "devStartMysql": "node /db/mysql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.1.0",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1"
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "firebase": "^9.6.9",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
-    "nodemon": "^1.19.2"
+    "nodemon": "^2.0.15"
   }
 }

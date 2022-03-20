@@ -3,41 +3,28 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const jwt = require('jsonwebtoken')
+var cookieParser = require('cookie-parser')
 
+const {login,helloController }= require('./contollers/auth')
+const connection = require("./db/mysql")
+app.use(cookieParser())
 app.use(express.json())
 
-let refreshTokens = []
 
-app.post('/token', (req, res) => {
-  const refreshToken = req.body.token
-  if (refreshToken == null) return res.sendStatus(401)
-  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403)
-    const accessToken = generateAccessToken({ name: user.name })
-    res.json({ accessToken: accessToken })
-  })
-})
 
-app.delete('/logout', (req, res) => {
-  refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-  res.sendStatus(204)
-})
+//ROUTES
 
-app.post('/login', (req, res) => {
-  // Authenticate User
+app.get('/hello',helloController)
 
-  const username = req.body.username
-  const user = { name: username }
 
-  const accessToken = generateAccessToken(user)
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-  refreshTokens.push(refreshToken)
-  res.json({ accessToken: accessToken, refreshToken: refreshToken })
-})
-
-function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
-}
+connection.connect(function (err) {
+    if(err){
+        console.log("error occured while connecting");
+        console.log('eoor : ',err)
+    }
+    else{
+        console.log("connection created with Mysql successfully");
+    }
+ });
 
 app.listen(4000)
